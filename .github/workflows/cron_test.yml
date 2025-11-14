@@ -3,6 +3,7 @@ name: Cron Test
 on:
   schedule:
     - cron: "* * * * *"
+  workflow_dispatch:
 
 jobs:
   test:
