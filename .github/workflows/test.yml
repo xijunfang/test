@@ -1,12 +1,23 @@
-name: Test
+# .github/workflows/daily-health-check.yml
+name: Daily Website Health Check
 
 on:
   schedule:
-    - cron: "*/7 * * * *"
+    # 每天午夜 (UTC) 執行
+    - cron: '0 0 * * *'
 
 jobs:
-  test:
+  health-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Print time
-        run: echo "Cron fired at $(date -u)"
+      - name: Check the website status
+        # 將 https://your-website.com 換成你的網站網址
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://your-website.com)
+          if [ "$response" -eq 200 ]; then
+            echo "Website is up and running!"
+          else
+            echo "Website is DOWN! HTTP status code: $response"
+            exit 1 # 讓 Action 執行失敗以發出警報
+          fi
+ 
